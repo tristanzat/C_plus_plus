@@ -3,19 +3,7 @@
 #include <iostream>
 #include <list>
 
-static std::list<Account>::iterator find_account(std::list<Account>& accounts, int account_id)
-{
-    std::list<Account>::iterator it;
-    for (it = accounts.begin(); it != accounts.end(); it++)
-    {
-        if ((*it).get_id() == account_id)
-        {
-            return it;
-        }
-    }
-
-    return it;
-}
+static std::list<Account>::iterator find_account(std::list<Account>& accounts, int account_id);
 
 int main()
 {
@@ -158,4 +146,18 @@ int main()
     }
 
     return 0;
+}
+
+static std::list<Account>::iterator find_account(std::list<Account>& accounts, int account_id)
+{
+    std::list<Account>::iterator it;
+    for (it = accounts.begin(); it != accounts.end(); it++)
+    {
+        if ((*it).get_id() == account_id)
+        {
+            return it;
+        }
+    }
+
+    return it;
 }
