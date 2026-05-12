@@ -20,16 +20,32 @@ void Account::init_account() {
 
 	// Get balance
 	std::cout << "Enter the balance: ";
-	std::cin >> balance;
+
+	bool valid = false;
+
+	while (!valid)
+	{
+		// Validate input
+		if (!(std::cin >> balance))
+		{
+			std::cin.clear(); // Reset the error flags
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input
+			std::cout << "Inavlid balance. Please enter a decimal value: ";
+		}
+		else
+		{
+			valid = true;
+		}
+	}
 }
 
 // Return id
-int Account::get_id() {
+int Account::get_id() const {
 	return account_id;
 }
 
 // Return balance
-float Account::get_balance() {
+float Account::get_balance() const {
 	return balance;
 }
 

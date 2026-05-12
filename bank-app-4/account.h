@@ -16,8 +16,8 @@ public:
 	void display();
 	void deposit(float amount);
 	void withdraw(float amount);
-	float get_balance();
-	int get_id();
+	float get_balance() const;
+	int get_id() const;
 	Account& operator+= (float amount);
 	Account& operator-= (float amount);
 	std::ostream& display(std::ostream& output) const;

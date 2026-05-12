@@ -4,8 +4,14 @@
 #include <list>
 #include <algorithm>
 #include <numeric>
+#include <limits>
+#include <tuple>
 
 static std::list<Account>::iterator find_account(std::list<Account>& accounts, int account_id);
+template<typename T>
+static std::tuple<bool, T> valid_input(std::istream& input);
+template<typename T>
+static T loop_for_input(std::istream& input);
 
 int main()
 {
@@ -19,6 +25,9 @@ int main()
 
     while (!done)
     {
+        // Initialize choice for loop
+        bool valid_choice = false;
+
         // Display menu
         std::cout << "\nAccount Menu:\n"
             "0. Quit Program\n"
@@ -32,8 +41,23 @@ int main()
             "8. Add a dividend to all accounts\n"
             "Your choice : ";
 
-        // Get user choice and consume the newline
-        std::cin >> choice;
+        // Validate user choice
+        while (!valid_choice)
+        {
+            auto valid = valid_input<int>(std::cin);
+            valid_choice = std::get<0>(valid);
+
+            if (valid_choice)
+            {
+                choice = std::get<1>(valid);
+            }
+            else
+            {
+                std::cout << "Invalid input. Please enter a valid option (0-8): ";
+            }
+        }
+
+        // Consume newline
         std::cin.ignore();
 
         // Allow switch to continue if an account exists, user is creating account, or user is trying to quit
@@ -56,7 +80,23 @@ int main()
                     // Get id
                     std::cout << "Enter the ID of the account to find: ";
                     int search_id = 0;
-                    std::cin >> search_id;
+                    
+                    bool valid = false;
+                    // Validate user choice
+                    while (!valid)
+                    {
+                        auto valid_tuple = valid_input<int>(std::cin);
+                        valid = std::get<0>(valid_tuple);
+
+                        if (valid)
+                        {
+                            search_id = std::get<1>(valid_tuple);
+                        }
+                        else
+                        {
+                            std::cout << "Invalid input. Please enter a valid option (non-negative integer): ";
+                        }
+                    }
 
                     // Search and see if it was found
                     std::list<Account>::iterator it = find_account(accounts, search_id);
@@ -66,7 +106,28 @@ int main()
                         std::cout << "Found account: " << (*it);
                         std::cout << "Amount to deposit: ";
                         float amount = 0;
-                        std::cin >> amount;
+
+                        // Validate user choice
+                        bool valid = false;
+                        while (!valid)
+                        {
+                            auto valid_tuple = valid_input<float>(std::cin);
+                            valid = std::get<0>(valid_tuple);
+
+                            if (valid)
+                            {
+                                amount = std::get<1>(valid_tuple);
+                                if (amount <= 0)
+                                {
+                                    valid = false;
+                                }
+                            }
+                            if (!valid)
+                            {
+                                std::cout << "Invalid input. Please enter a positive, non-zero decimal number: ";
+                            }
+                        }
+
                         (*it) += amount;
                     }
                     else
@@ -81,7 +142,23 @@ int main()
                     // Get id
                     std::cout << "Enter the ID of the account to find: ";
                     int search_id = 0;
-                    std::cin >> search_id;
+
+                    // Validate user choice
+                    bool valid = false;
+                    while (!valid)
+                    {
+                        auto valid_tuple = valid_input<int>(std::cin);
+                        valid = std::get<0>(valid_tuple);
+
+                        if (valid)
+                        {
+                            search_id = std::get<1>(valid_tuple);
+                        }
+                        else
+                        {
+                            std::cout << "Invalid input. Please enter a valid option (non-negative integer): ";
+                        }
+                    }
 
                     // Search and see if it was found
                     std::list<Account>::iterator it = find_account(accounts, search_id);
@@ -91,7 +168,28 @@ int main()
                         std::cout << "Found account: " << (*it);
                         std::cout << "Amount to withdraw: ";
                         float amount = 0;
-                        std::cin >> amount;
+
+                        // Validate user choice
+                        bool valid = false;
+                        while (!valid)
+                        {
+                            auto valid_tuple = valid_input<float>(std::cin);
+                            valid = std::get<0>(valid_tuple);
+
+                            if (valid)
+                            {
+                                amount = std::get<1>(valid_tuple);
+                                if (amount <= 0)
+                                {
+                                    valid = false;
+                                }
+                            }
+                            if (!valid)
+                            {
+                                std::cout << "Invalid input. Please enter a positive, non-zero decimal number: ";
+                            }
+                        }
+
                         (*it) -= amount;
                     }
                     else
@@ -115,7 +213,23 @@ int main()
                     // Get id
                     std::cout << "Enter the ID of the account to find: ";
                     int search_id = 0;
-                    std::cin >> search_id;
+                    
+                    // Validate user choice
+                    bool valid = false;
+                    while (!valid)
+                    {
+                        auto valid_tuple = valid_input<int>(std::cin);
+                        valid = std::get<0>(valid_tuple);
+
+                        if (valid)
+                        {
+                            search_id = std::get<1>(valid_tuple);
+                        }
+                        else
+                        {
+                            std::cout << "Invalid input. Please enter a valid option (non-negative integer): ";
+                        }
+                    }
 
                     // Search and see if it was found
                     std::list<Account>::iterator it = find_account(accounts, search_id);
@@ -136,7 +250,23 @@ int main()
                     // Get id
                     std::cout << "Enter ID of account to remove: ";
                     int remove_id = 0;
-                    std::cin >> remove_id;
+                    
+                    // Validate user choice
+                    bool valid = false;
+                    while (!valid)
+                    {
+                        auto valid_tuple = valid_input<int>(std::cin);
+                        valid = std::get<0>(valid_tuple);
+
+                        if (valid)
+                        {
+                            remove_id = std::get<1>(valid_tuple);
+                        }
+                        else
+                        {
+                            std::cout << "Invalid input. Please enter a valid option (non-negative integer): ";
+                        }
+                    }
 
                     // Use remove_if to see if account exists to be removed
                     auto accounts_end = remove_if(accounts.begin(), accounts.end(), [remove_id](auto account) {
@@ -157,7 +287,7 @@ int main()
                 case 7:
                 {
                     // Add up all balances
-                    float total = accumulate(accounts.begin(), accounts.end(), 0, [](float accumulator, auto account) {
+                    float total = accumulate(accounts.begin(), accounts.end(), 0.0f, [](float accumulator, auto account) {
                         return accumulator + account.get_balance();
                         });
 
@@ -172,7 +302,27 @@ int main()
                     // Get percentage to add
                     std::cout << "Enter the dividend as a percentage: ";
                     float dividend = 0.0;
-                    std::cin >> dividend;
+                    
+                    // Validate user choice
+                    bool valid = false;
+                    while (!valid)
+                    {
+                        auto valid_tuple = valid_input<float>(std::cin);
+                        valid = std::get<0>(valid_tuple);
+
+                        if (valid)
+                        {
+                            dividend = std::get<1>(valid_tuple);
+                            if (dividend <= 0)
+                            {
+                                valid = false;
+                            }
+                        }
+                        if (!valid)
+                        {
+                            std::cout << "Invalid input. Please enter a positive, non-zero decimal number: ";
+                        }
+                    }
 
                     // Convert dividend to percentage
                     dividend = dividend / 100;
@@ -217,4 +367,19 @@ static std::list<Account>::iterator find_account(std::list<Account>& accounts, i
     }
 
     return it;
+}
+
+template<typename T>
+static std::tuple<bool, T> valid_input(std::istream& input)
+{
+    T value;
+
+    if (!(input >> value))
+    {
+        std::cin.clear(); // Reset the error flags
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input
+        return std::make_tuple(false, T{});
+    }
+
+    return std::make_tuple(true, value);
 }
