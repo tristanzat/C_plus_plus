@@ -376,8 +376,8 @@ static std::tuple<bool, T> valid_input(std::istream& input)
 
     if (!(input >> value))
     {
-        std::cin.clear(); // Reset the error flags
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input
+        input.clear(); // Reset the error flags
+        input.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input
         return std::make_tuple(false, T{});
     }
 
