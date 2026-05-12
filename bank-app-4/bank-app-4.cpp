@@ -10,8 +10,6 @@
 static std::list<Account>::iterator find_account(std::list<Account>& accounts, int account_id);
 template<typename T>
 static std::tuple<bool, T> valid_input(std::istream& input);
-template<typename T>
-static T loop_for_input(std::istream& input);
 
 int main()
 {
